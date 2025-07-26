@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+#import matplotlib.pyplot as plt
+#import seaborn as sns
 from scipy.sparse import hstack
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import StratifiedKFold, train_test_split
@@ -16,7 +16,7 @@ import xgboost as xgb
 
 # 1. Load the data
 try:
-    df = pd.read_csv('cleaned_TREC-05.csv', on_bad_lines='skip')
+    df = pd.read_csv('cleansed_TREC-05.csv', on_bad_lines='skip')
     print("Dataset loaded successfully.")
     print("\nDataset shape:", df.shape)
     print("\nFirst 5 rows of the dataset:")

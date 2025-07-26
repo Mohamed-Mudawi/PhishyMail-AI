@@ -3,5 +3,3 @@ scikit-learn
 xgboost
 numpy
 scipy
-matplotlib
-seaborn
