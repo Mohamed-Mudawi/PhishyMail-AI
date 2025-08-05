@@ -12,11 +12,12 @@ from sklearn.svm import SVC
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.naive_bayes import MultinomialNB
 import xgboost as xgb
+import joblib
 #from xgboost import XGBClassifier
 
 # 1. Load the data
 try:
-    df = pd.read_csv('cleansed_TREC-05.csv', on_bad_lines='skip')
+    df = pd.read_csv('cleaned_TREC_05.csv', on_bad_lines='skip')
     print("Dataset loaded successfully.")
     print("\nDataset shape:", df.shape)
     print("\nFirst 5 rows of the dataset:")
@@ -49,97 +50,77 @@ print(y.value_counts())
 X_train, X_test, y_train, y_test = train_test_split(X,y, test_size = 0.2, random_state=42)
 
 
+
+
 # # 3. Model training and evaluation
-# print("\nTraining and evaluating models using 10-fold stratified cross-validation.")
+print("\nTraining and evaluating models using 10-fold stratified cross-validation.")
 
 # Create a dictionary with the ML models to be compared
 models = {
-    "Logistic Regression": LogisticRegression(max_iter=10000, random_state=42),
-    "Multinomial NB": MultinomialNB(),
-    #"SVM": SVC(kernel='linear', probability=True, random_state=42),
-    #"Extra Trees": ExtraTreesClassifier(n_estimators=100, random_state=42),
+    "Logistic_Regression": LogisticRegression(max_iter=10000, random_state=42),
+    "Multinomial_NB": MultinomialNB(),
+    #"SVM": SVC(kernel='linear', random_state=42),
+    #"Extra_Trees": ExtraTreesClassifier(n_estimators=100, random_state=42),
     "XGBoost": xgb.XGBClassifier(eval_metric='logloss', random_state=42),
 }
 
-# # The paper uses 10-fold stratified cross-validation.
-# skf = StratifiedKFold(n_splits=10)
 
-# results = {}
+results = {}
 
-# # Loop through the models dictionary
-# for model_name, model in models.items():
-#     print("\nTraining model: ", model_name)
-#     accuracies, precisions, recalls, f1_scores = [], [], [], []
-#     final_cm = np.zeros((2,2), dtype=int)
-
-#     # Loop through the training splits
-#     for i, (train_index, test_index) in enumerate(skf.split(X_train, y_train)):
-#         X_train_folds = X_train[train_index]
-#         X_test_folds = X_train[test_index]
-#         y_train_folds = y_train.iloc[train_index]
-#         y_test_folds = y_train.iloc[test_index]
-
-#         unique_labels, unique_counts = np.unique(y_train_folds, return_counts=True)
-#         print(f"\nFold {i+1} label distribution:\nPhishing emails {unique_counts[1]}\nNon-phishing emails {unique_counts[0]}\n")
-
-#         model.fit(X_train_folds, y_train_folds)
-#         y_pred = model.predict(X_test_folds)
-
-#         accuracies.append(accuracy_score(y_test_folds, y_pred))
-#         precisions.append(precision_score(y_test_folds, y_pred))
-#         recalls.append(recall_score(y_test_folds, y_pred))
-#         f1_scores.append(f1_score(y_test_folds, y_pred))
-
-#         final_cm += confusion_matrix(y_test_folds, y_pred, labels=unique_labels)
-
-#     results[model_name] = {
-#         "Accuracy": np.mean(accuracies),
-#         "Precision": np.mean(precisions),
-#         "Recall": np.mean(recalls),
-#         "F1-Score": np.mean(f1_scores),
-#         "Confusion matrix": final_cm
-#     }
-# # 4. Display results
-
-# for model_name in results.keys():
-#     print("\n-----------Results model: ", model_name)
-#     print("Accuracy:", results[model_name]["Accuracy"])
-#     print("Precision:", results[model_name]["Precision"])
-#     print("Recall:", results[model_name]["Recall"])
-#     print("F1-Score:", results[model_name]["F1-Score"])
-#     print("Confusion matrix:\n", results[model_name]["Confusion matrix"])
+# Loop through the models dictionary
+for model_name, model in models.items():
+    print("\nTraining model: ", model_name)
     
-print("\n-----------Final Evaluation -----------")
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    
+    # compute the metrics
+    accuracy = accuracy_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
+    cm = confusion_matrix(y_test, y_pred)
+    
+    #save the model
+    model_filename = f"{model_name}_model.joblib"
+    joblib.dump(model, model_filename)
+    print("Model saved as: ", model_filename)
+    
+    # store results
+    results[model_name] = {
+        "Accuracy": accuracy,
+        "Precision": precision,
+        "Recall": recall,
+        "F1-Score": f1,
+        "Confusion matrix": cm
+    }
+   
+joblib.dump(vectorizer, "tfidf_vectorizer.joblib")
+print("\nTF-IDF vectorizer saved as 'tfidf_vectorizer.joblib'")
+        
+# 4. Display results
+    
+print("\n-----------Final Evaluation for all models -----------")
 
-# Choose the best model based on metrics
-best_model_name = "XGBoost"
-best_model = models[best_model_name]
+for model_name, metrics in results.items():
+    print("\n-----------Results model: ", model_name)
+    print("Accuracy:", metrics["Accuracy"])
+    print("Precision:", metrics["Precision"])
+    print("Recall: ", metrics["Recall"])
+    print("F1-Score: ", metrics["F1-Score"])
+    print("Confusion matrix:\n", metrics["Confusion matrix"])
+   
 
-print(f"\nTraining the best model ({best_model_name}) on the full training set...")
-best_model.fit(X_train, y_train)
+# # ------ To load the model-------
+# # Load the saved model
+# model = joblib.load("XGBoost_model.joblib")
 
-print("Evaluating on the unseen test set...")
-y_final_pred = best_model.predict(X_test)
-
-# Calculate and print final metrics
-print("\nFinal Test Set Performance:")
-print("Accuracy:", accuracy_score(y_test, y_final_pred))
-print("Precision:", precision_score(y_test, y_final_pred))
-print("Recall:", recall_score(y_test, y_final_pred))
-print("F1-Score:", f1_score(y_test, y_final_pred))
-print("\nClassification Report:\n", classification_report(y_test, y_final_pred))
-print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_final_pred))
+# # Use the model to make predictions
+# predictions = model.predict(X_test)
 
 
-# # target_names = ['Real (0.0)', 'Phishing (1.0)']
-# # plt.figure(figsize=(8, 6))
-# # sns.heatmap(results["Logistic Regression"]["Confusion matrix"], annot=True, fmt='d', cmap='Blues', xticklabels=target_names, yticklabels=target_names)
-# # plt.title('Confusion Matrix for Spam Detection')
-# # plt.ylabel('Actual Label')
-# # plt.xlabel('Predicted Label')
-# # plt.show()
 
-# print("\nEvaluation complete.")
+
 
 
 
