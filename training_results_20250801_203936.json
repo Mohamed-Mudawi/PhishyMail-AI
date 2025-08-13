@@ -1,0 +1,51 @@
+{
+  "timestamp": "20250801_203936",
+  "dataset_shape": [
+    53954,
+    23
+  ],
+  "n_features": 22,
+  "train_samples": 32372,
+  "val_samples": 10791,
+  "test_samples": 10791,
+  "baseline_accuracy": 0.9497729589472709,
+  "best_params": {
+    "colsample_bytree": 0.9,
+    "learning_rate": 0.1,
+    "max_depth": 8,
+    "n_estimators": 300,
+    "subsample": 0.9
+  },
+  "best_cv_score": 0.9645990533135443,
+  "val_accuracy": 0.9642294504679826,
+  "test_accuracy": 0.9662681864516727,
+  "precision": 0.952610794207986,
+  "recall": 0.9670378619153674,
+  "f1_score": 0.9597701149425287,
+  "cv_mean": 0.966892912694537,
+  "cv_std": 0.002092542738035856,
+  "features_used": [
+    "subject_non_ascii_ratio",
+    "sender_domain_length",
+    "subject_colon_count",
+    "subject_capital_ratio",
+    "body_url_char_ratio",
+    "body_hyphen_count",
+    "subject_non_ascii_count",
+    "sender_length",
+    "subject_digit_count",
+    "total_urls",
+    "body_phone_count",
+    "body_email_count",
+    "subject_all_caps_words",
+    "body_exclamation_count",
+    "subject_sentence_count",
+    "body_colon_count",
+    "subject_money_mentions",
+    "subject_mixed_case_words",
+    "body_action_words",
+    "body_money_mentions",
+    "body_all_caps_words",
+    "body_non_ascii_ratio"
+  ]
+}
