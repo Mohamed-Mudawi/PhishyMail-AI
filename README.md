@@ -28,47 +28,49 @@ Enumerate the main results of this project in a list and describe them.
    
 ## Methodologies <!--- do not change this line -->
 (UPDATE IN README.md)
-This project implements a phishing email detection system with three different algorithms integrated into a single Streamlit application. The section below describes the methodology followed for my model implementation.
 
-1. Data Preparation
-Initial Dataset: The dataset was preprocessed and reduced to the following key columns:
-subject, sender, body, label, and urls.
+<p>
+Our phishing email detection app utilizes three different algorithms developed by different members of the team.
+This section explains the methodology used for my implementation.
+</p>
 
-Handling Missing Data: All rows containing missing values were removed to ensure model quality.
+<h3>Data Preparation</h3>
+<ul>
+  <li>The dataset was preprocessed and reduced to the following columns: <code>subject</code>, <code>sender</code>, <code>body</code>, <code>label</code>, and <code>urls</code>.</li>
+  <li>All missing values were removed.</li>
+  <li>A new column named <code>text</code> was created by joining the <code>subject</code> and <code>body</code> columns.</li>
+</ul>
 
-Text Consolidation: A new column named text was created by concatenating the subject and body fields.
+<h3>Text Cleaning</h3>
+<p>A custom text cleaning function was implemented to:</p>
+<ul>
+  <li>Remove URLs</li>
+  <li>Remove email addresses</li>
+  <li>Remove punctuation</li>
+  <li>Convert all text to lowercase</li>
+</ul>
 
-2. Text Cleaning
-A custom text-cleaning function was applied to standardize and sanitize the email content:
+<h3>Feature Extraction</h3>
+<ul>
+  <li>Applied <strong>TF-IDF Vectorization</strong> on the cleaned <code>text</code> column to convert textual data into numerical features.</li>
+  <li>Counted the number of URLs in each email and stored it in a new feature called <code>url_count</code>.</li>
+  <li>Normalized the <code>url_count</code> values.</li>
+  <li>Combined the TF-IDF features with the normalized <code>url_count</code> feature into a single feature set.</li>
+</ul>
 
-Removed URLs.
+<h3>Model Training</h3>
+<ul>
+  <li>Split the dataset into training and testing sets.</li>
+  <li>Trained a <strong>Random Forest Classifier</strong> using the prepared features.</li>
+  <li>Saved the trained model using <code>joblib</code> for later use.</li>
+</ul>
 
-Removed email addresses.
+<h3>Deployment</h3>
+<ul>
+  <li>Integrated the trained model into a <strong>Streamlit</strong> application to allow users to input emails and get phishing detection results in real time.</li>
+  <li>The app also includes models developed by other team members for comparison and versatility.</li>
+</ul>
 
-Removed punctuation.
-
-Converted all text to lowercase for uniformity.
-
-3. Feature Extraction
-TF-IDF Vectorization: Applied Term Frequency–Inverse Document Frequency (TF-IDF) to transform the cleaned text into numerical feature vectors, capturing the importance of each term.
-
-URL Count Feature: Counted the number of URLs in each email and stored the result in a url_count column.
-
-Normalization: The url_count feature was normalized to match the scale of other features.
-
-Feature Combination: Merged the TF-IDF feature matrix with the normalized url_count feature into a single feature set.
-
-4. Model Training
-Train-Test Split: The dataset was split into training and testing sets to evaluate model performance.
-
-Algorithm: A Random Forest Classifier was used to train the model due to its robustness in handling high-dimensional feature spaces.
-
-Model Persistence: The trained model was saved using joblib for later deployment.
-
-5. Deployment
-The model was integrated into a Streamlit application, allowing users to input email data and receive predictions.
-
-Other team members developed their own models, which were also integrated into the same Streamlit app, giving users multiple algorithm options for phishing detection.
 
 ## Data Sources
 [Link to Datasets](https://drive.google.com/drive/folders/1sBO10D3sSdqMvb27fH-g3BI_ro63MyjW?dmr=1&ec=wgc-drive-hero-goto)
