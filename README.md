@@ -28,9 +28,47 @@ Enumerate the main results of this project in a list and describe them.
    
 ## Methodologies <!--- do not change this line -->
 (UPDATE IN README.md)
-*EXAMPLE:*
-*To accomplish this, we utilized the OpenAI API to interact with ChatGPT, and we designed a custom Python script to generate diverse prompts and collect corresponding responses. The data was then processed and analyzed using pandas, enabling us to detect patterns and biases in the AI model's outputs.*
-*Engineered a Python script to generate over 1,000 prompts and elicit their responses from ChatGPT, utilizing pandas to collect the data. When prompted for solutions to this specific relevant crisis, nearly 80% of ChatGPT's responses promoted a certain worldview.*
+This project implements a phishing email detection system with three different algorithms integrated into a single Streamlit application. The section below describes the methodology followed for my model implementation.
+
+1. Data Preparation
+Initial Dataset: The dataset was preprocessed and reduced to the following key columns:
+subject, sender, body, label, and urls.
+
+Handling Missing Data: All rows containing missing values were removed to ensure model quality.
+
+Text Consolidation: A new column named text was created by concatenating the subject and body fields.
+
+2. Text Cleaning
+A custom text-cleaning function was applied to standardize and sanitize the email content:
+
+Removed URLs.
+
+Removed email addresses.
+
+Removed punctuation.
+
+Converted all text to lowercase for uniformity.
+
+3. Feature Extraction
+TF-IDF Vectorization: Applied Term Frequency–Inverse Document Frequency (TF-IDF) to transform the cleaned text into numerical feature vectors, capturing the importance of each term.
+
+URL Count Feature: Counted the number of URLs in each email and stored the result in a url_count column.
+
+Normalization: The url_count feature was normalized to match the scale of other features.
+
+Feature Combination: Merged the TF-IDF feature matrix with the normalized url_count feature into a single feature set.
+
+4. Model Training
+Train-Test Split: The dataset was split into training and testing sets to evaluate model performance.
+
+Algorithm: A Random Forest Classifier was used to train the model due to its robustness in handling high-dimensional feature spaces.
+
+Model Persistence: The trained model was saved using joblib for later deployment.
+
+5. Deployment
+The model was integrated into a Streamlit application, allowing users to input email data and receive predictions.
+
+Other team members developed their own models, which were also integrated into the same Streamlit app, giving users multiple algorithm options for phishing detection.
 
 ## Data Sources
 [Link to Datasets](https://drive.google.com/drive/folders/1sBO10D3sSdqMvb27fH-g3BI_ro63MyjW?dmr=1&ec=wgc-drive-hero-goto)
