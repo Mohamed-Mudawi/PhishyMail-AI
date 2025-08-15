@@ -46,7 +46,7 @@ Enumerate the main results of this project in a list and describe them.
 ## Authors  
 This project was completed in collaboration with:  
 
-- **Mohamed Mudawi** [GitHub](https://github.com/Mohamed-Mudawi) | [LinkedIn](https://www.linkedin.com/in/mohamed-mud/)  
 - **Bisesh Rana**  
 - **Bonnie Morales**  
 - **Bukola Awotoye**  
+- **Mohamed Mudawi** [GitHub](https://github.com/Mohamed-Mudawi) | [LinkedIn](https://www.linkedin.com/in/mohamed-mud/)  
