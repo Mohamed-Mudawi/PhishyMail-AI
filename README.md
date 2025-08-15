@@ -34,9 +34,12 @@ Enumerate the main results of this project in a list and describe them.
   <img src="https://img.shields.io/badge/pandas-150458?style=for-the-badge&logo=pandas&logoColor=white" alt="pandas"/>
   <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit"/>
 </p>
-## Authors 
-*This project was completed in collaboration with:*
-- *Mohamed Mudawi [GitHub](https://github.com/Mohamed-Mudawi) [LinkedIn](https://www.linkedin.com/in/mohamed-mud/)*
-- *Bisesh Rana*
-- *Bonnie Morales*
-- *Bukola Awotoye*
+
+## Authors  
+
+This project was completed in collaboration with:  
+
+- **Mohamed Mudawi** [GitHub](https://github.com/Mohamed-Mudawi) | [LinkedIn](https://www.linkedin.com/in/mohamed-mud/)  
+- **Bisesh Rana**  
+- **Bonnie Morales**  
+- **Bukola Awotoye**  
