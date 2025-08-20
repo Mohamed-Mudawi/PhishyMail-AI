@@ -22,7 +22,6 @@ With phishing attacks becoming increasingly sophisticated and widespread, the ne
 
    
 ## Methodologies <!--- do not change this line -->
-(UPDATE IN README.md)
 
 <p>
 Our phishing email detection app utilizes three different algorithms developed by different members of the team.
