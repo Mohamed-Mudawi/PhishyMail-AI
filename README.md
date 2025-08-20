@@ -1,7 +1,7 @@
 <div align="center">
-  <a href="https://phishymailai.streamlit.app" target="_blank"><img src="https://i.imgur.com/1hTgX65.png" alt="Logo" height="200" width="200"/></a>
+  <a href="https://phisymail-ai.streamlit.app" target="_blank"><img src="https://i.imgur.com/1hTgX65.png" alt="Logo" height="200" width="200"/></a>
   <h1>PhishyMail AI</h1>
-  <p><a href="https://phishymailai.streamlit.app" target="_blank">View the Deployed App</a></p>
+  <p><a href="https://phisymail-ai.streamlit.app" target="_blank">View the Deployed App</a></p>
 </div>
 
 PhishyMail AI is a multi-model machine learning–powered system for detecting phishing emails. It analyzes the content and metadata of incoming emails using natural language processing. The system incorporates logistic regression and Random Forest classifiers to distinguish phishing attempts from legitimate messages, leveraging Python-based preprocessing, feature extraction, and robust evaluation metrics to ensure high detection accuracy.
