@@ -4,7 +4,7 @@
   <p><a href="https://phishymailai.streamlit.app" target="_blank">View the Deployed App</a></p>
 </div>
 
-PhishyMail AI is a machine learning–powered system for detecting phishing emails. It analyzes the content and metadata of incoming emails using natural language processing. The system incorporates logistic regression and Random Forest classifiers to distinguish phishing attempts from legitimate messages, leveraging Python-based preprocessing, feature extraction, and robust evaluation metrics to ensure high detection accuracy.
+PhishyMail AI is a multi-model machine learning–powered system for detecting phishing emails. It analyzes the content and metadata of incoming emails using natural language processing. The system incorporates logistic regression and Random Forest classifiers to distinguish phishing attempts from legitimate messages, leveraging Python-based preprocessing, feature extraction, and robust evaluation metrics to ensure high detection accuracy.
 
 ## Running Locally
 
