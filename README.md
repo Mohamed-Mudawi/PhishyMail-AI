@@ -91,7 +91,7 @@ This section explains the methodology used for my implementation.
 ## Authors  
 This project was completed in collaboration with:  
 
-- **Bisesh Rana**  
-- **Bonnie Morales**  
-- **Bukola Awotoye**  
-- **Mohamed Mudawi** [GitHub](https://github.com/Mohamed-Mudawi) | [LinkedIn](https://www.linkedin.com/in/mohamed-mud/)  
+- **Bisesh Rana**  [Github](https://github.com/biseshRana)
+- **Bonnie Morales**  [Github](https://github.com/BonnieMorales)
+- **Bukola Awotoye**  [Github](https://github.com/bukolaawotoye)
+- **Mohamed Mudawi** [GitHub](https://github.com/Mohamed-Mudawi)
