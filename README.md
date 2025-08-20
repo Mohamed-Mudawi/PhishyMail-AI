@@ -11,7 +11,7 @@ PhishyMail AI is a machine learning–powered system for detecting phishing emai
 ```
 - git clone https://github.com/Mohamed-Mudawi/PhisyMail-AI
 - python -m venv venv
-- venv\\Scripts\\Activate.ps1 #powershell
+- venv\\Scripts\\Activate.ps1 # Powershell, Windows
 - pip install -r requirements.txt
 - streamlit run finalFrontend.py
 ```
