@@ -6,11 +6,12 @@ import re
 from datetime import datetime
 import os
 import glob
+import base64
 
-# Page configuration
+# Page configuration with custom favicon
 st.set_page_config(
-    page_title="🛡️ Phishing Email Detector",
-    page_icon="🛡️",
+    page_title="PhishyMail AI",
+    page_icon="phishymail_ai_logo.png",  # This sets the favicon
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -129,23 +130,23 @@ def load_available_models():
                     latest_model = max(model_files, key=os.path.getctime)
                     model = joblib.load(latest_model)
                     available_models[model_name] = model
-                    model_info[model_name] = f"✅ Loaded: {os.path.basename(latest_model)}"
+                    model_info[model_name] = f"Loaded: {os.path.basename(latest_model)}"
             else:
                 # Direct file name
                 if os.path.exists(config["pattern"]):
                     model = joblib.load(config["pattern"])
                     available_models[model_name] = model
-                    model_info[model_name] = f"✅ Loaded: {config['pattern']}"
+                    model_info[model_name] = f"Loaded: {config['pattern']}"
                 else:
-                    model_info[model_name] = f"❌ File not found: {config['pattern']}"
+                    model_info[model_name] = f"File not found: {config['pattern']}"
                     
         except ModuleNotFoundError as e:
             if "LexiGuard" in str(e):
-                model_info[model_name] = f"❌ Missing LexiGuard.py - Please place the training script in the same directory"
+                model_info[model_name] = f"Missing LexiGuard.py - Please place the training script in the same directory"
             else:
-                model_info[model_name] = f"❌ Missing module: {str(e)}"
+                model_info[model_name] = f"Missing module: {str(e)}"
         except Exception as e:
-            model_info[model_name] = f"❌ Error loading: {str(e)}"
+            model_info[model_name] = f"Error loading: {str(e)}"
     
     return available_models, model_info
 
@@ -315,28 +316,31 @@ def get_risk_factors_random_forest(features):
         risk_factors.append("High ratio of removed content (URLs, emails, symbols)")
     return risk_factors
 
-def get_risk_factors_random_forest(features):
-    """Get risk factors for Random Forest model"""
-    risk_factors = []
-    if features.get('url_count', 0) > 2:
-        risk_factors.append(f"Multiple URLs detected ({features['url_count']})")
-    if features.get('removed_emails', 0) > 1:
-        risk_factors.append(f"Multiple email addresses found ({features['removed_emails']})")
-    if features.get('cleaned_text_length', 0) < 20:
-        risk_factors.append("Very short email content (suspicious brevity)")
-    if features.get('word_count', 0) < 5:
-        risk_factors.append("Very few words in email")
-    if features.get('original_text_length', 0) > features.get('cleaned_text_length', 0) * 2:
-        risk_factors.append("High ratio of removed content (URLs, emails, symbols)")
-    return risk_factors
-
 # Streamlit App
 def main():
-    # Title and description
-    st.title("🛡️ Multi-Model Phishing Email Detector")
+    # Display logo in header if available
+    logo_path = "phishymail_ai_logo.png"
+    if os.path.exists(logo_path):
+        # Center the logo and title
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.markdown(
+                f"""
+                <div style='text-align: center;'>
+                    <img src='data:image/png;base64,{base64.b64encode(open(logo_path, 'rb').read()).decode()}' width='300'>
+                </div>
+                """, 
+                unsafe_allow_html=True
+            )
+            st.markdown("<h1 style='text-align: center;'>PhishyMail AI</h1>", unsafe_allow_html=True)
+            st.markdown("<h3 style='text-align: center;'>Multi-Model Phishing Email Detector</h3>", unsafe_allow_html=True)
+    else:
+        # Fallback if logo is not found
+        st.title("PhishyMail AI - Multi-Model Phishing Email Detector")
+    
     st.markdown("---")
     st.markdown("""
-    **Detect phishing emails using multiple machine learning approaches!**
+    **Detect phishing emails using multiple machine learning approaches.**
     
     Compare predictions from different models: handcrafted features vs. advanced NLP techniques.
     """)
@@ -345,7 +349,7 @@ def main():
     available_models, model_info = load_available_models()
     
     if not available_models:
-        st.error("❌ No models found! Please ensure your model files are in the correct directory.")
+        st.error("No models found! Please ensure your model files are in the correct directory.")
         st.info("""
         **Expected model files:**
         - XGBoost models: `phishing_xgboost_model_*.joblib`
@@ -356,7 +360,7 @@ def main():
     
     # Sidebar
     with st.sidebar:
-        st.header("🤖 Model Selection")
+        st.header("Model Selection")
         
         # Model dropdown
         selected_model_name = st.selectbox(
@@ -366,9 +370,9 @@ def main():
         )
         
         # Display model loading status
-        st.markdown("### 📊 Model Status")
+        st.markdown("### Model Status")
         for model_name, status in model_info.items():
-            if "✅" in status:
+            if "Loaded:" in status:
                 st.success(status)
             else:
                 st.error(status)
@@ -376,13 +380,13 @@ def main():
         # Model description
         config = MODEL_CONFIGS[selected_model_name]
         st.markdown("---")
-        st.header("📋 Model Details")
+        st.header("Model Details")
         st.markdown(f"**{config['description']}**")
         st.markdown(f"**Features:** {config['features']}")
         st.markdown(f"**Strengths:** {config['strengths']}")
         
         st.markdown("---")
-        st.header("ℹ️ How Models Differ")
+        st.header("How Models Differ")
         st.markdown("""
         **XGBoost Model:**
         - Uses 22 handcrafted features
@@ -408,7 +412,7 @@ def main():
     if selected_model:
         # Create input form
         with st.form("email_form"):
-            st.header("📧 Enter Email Details")
+            st.header("Enter Email Details")
             
             col1, col2 = st.columns([1, 1])
             
@@ -436,14 +440,14 @@ def main():
             # Submit buttons
             col1, col2 = st.columns(2)
             with col1:
-                submitted_single = st.form_submit_button(f"🔍 Analyze with {selected_model_name}", use_container_width=True)
+                submitted_single = st.form_submit_button(f"Analyze with {selected_model_name}", use_container_width=True)
             with col2:
-                submitted_all = st.form_submit_button("🔄 Compare All Models", use_container_width=True)
+                submitted_all = st.form_submit_button("Compare All Models", use_container_width=True)
         
         # Process predictions
         if submitted_single or submitted_all:
             if not any([sender, subject, body]):
-                st.warning("⚠️ Please provide at least one field (sender, subject, or body) to analyze.")
+                st.warning("Please provide at least one field (sender, subject, or body) to analyze.")
             else:
                 # Single model analysis
                 if submitted_single:
@@ -455,16 +459,16 @@ def main():
                             
                             # Display results
                             st.markdown("---")
-                            st.header(f"🎯 {selected_model_name} Analysis Results")
+                            st.header(f"{selected_model_name} Analysis Results")
                             
                             col1, col2, col3 = st.columns([2, 1, 1])
                             
                             with col1:
                                 if prediction == 1:
-                                    st.error("🚨 **PHISHING DETECTED**")
+                                    st.error("**PHISHING DETECTED**")
                                     st.error(f"This email appears to be a phishing attempt with {probabilities[1]:.1%} confidence.")
                                 else:
-                                    st.success("✅ **LEGITIMATE EMAIL**")
+                                    st.success("**LEGITIMATE EMAIL**")
                                     st.success(f"This email appears to be legitimate with {probabilities[0]:.1%} confidence.")
                             
                             with col2:
@@ -475,7 +479,7 @@ def main():
                             
                             # Feature analysis
                             st.markdown("---")
-                            st.header("📊 Feature Analysis")
+                            st.header("Feature Analysis")
                             
                             # Show detected features
                             feature_df = pd.DataFrame({
@@ -485,14 +489,14 @@ def main():
                             
                             non_zero_features = feature_df[feature_df['Value'] > 0]
                             if len(non_zero_features) > 0:
-                                st.subheader("🔍 Detected Patterns:")
+                                st.subheader("Detected Patterns:")
                                 st.dataframe(non_zero_features.sort_values('Value', ascending=False), hide_index=True)
                             else:
                                 st.info("No notable patterns detected in this email.")
                             
                             # Risk assessment
                             st.markdown("---")
-                            st.header("⚠️ Risk Assessment")
+                            st.header("Risk Assessment")
                             
                             config = MODEL_CONFIGS[selected_model_name]
                             if config["type"] == "xgboost":
@@ -519,7 +523,7 @@ def main():
                 if submitted_all:
                     with st.spinner("Running analysis with all available models..."):
                         st.markdown("---")
-                        st.header("🔄 Model Comparison Results")
+                        st.header("Model Comparison Results")
                         
                         comparison_results = {}
                         detailed_results = {}
@@ -528,7 +532,7 @@ def main():
                             try:
                                 pred, prob, feats = predict_phishing(model, model_name, sender, subject, body)
                                 comparison_results[model_name] = {
-                                    'Prediction': '🚨 Phishing' if pred == 1 else '✅ Legitimate',
+                                    'Prediction': 'Phishing' if pred == 1 else 'Legitimate',
                                     'Confidence': f"{prob[pred]:.1%}",
                                     'Phishing Probability': f"{prob[1]:.1%}",
                                     'Legitimacy Probability': f"{prob[0]:.1%}"
@@ -536,7 +540,7 @@ def main():
                                 detailed_results[model_name] = (pred, prob, feats)
                             except Exception as e:
                                 comparison_results[model_name] = {
-                                    'Prediction': '❌ Error',
+                                    'Prediction': 'Error',
                                     'Confidence': 'N/A',
                                     'Phishing Probability': 'N/A',
                                     'Legitimacy Probability': str(e)[:50] + "..."
@@ -549,15 +553,15 @@ def main():
                         # Agreement analysis
                         predictions = [detailed_results[name][0] for name in detailed_results.keys()]
                         if len(set(predictions)) == 1:
-                            st.success("🤝 **All models agree** on the prediction!")
+                            st.success("**All models agree** on the prediction!")
                         else:
-                            st.warning("⚠️ **Models disagree** - consider the confidence levels and context.")
+                            st.warning("**Models disagree** - consider the confidence levels and context.")
         
         # Example emails section
         st.markdown("---")
-        st.header("📝 Try These Examples")
+        st.header("Try These Examples")
         
-        tab1, tab2, tab3 = st.tabs(["🎣 Phishing Example", "✅ Legitimate Example", "🔍 Advanced Phishing"])
+        tab1, tab2, tab3 = st.tabs(["Phishing Example", "Legitimate Example", "Advanced Phishing"])
         
         with tab1:
             st.code("""
@@ -617,11 +621,11 @@ PayPal Security Team
     st.markdown("---")
     st.markdown("""
     <div style='text-align: center; color: #666; padding: 20px;'>
-        <p>🛡️ Multi-Model Phishing Email Detector</p>
+        <p>PhishyMail AI - Multi-Model Phishing Email Detector</p>
         <p><em>Combining XGBoost, LexiGuard NLP, and Random Forest approaches</em></p>
         <p><em>Always verify suspicious emails through official channels</em></p>
     </div>
     """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
-    main()
+    main() 
