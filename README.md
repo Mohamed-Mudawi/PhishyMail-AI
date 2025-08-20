@@ -9,7 +9,7 @@ PhishyMail AI is a multi-model machine learning–powered system for detecting p
 ## Running Locally
 
 ```
-- git clone https://github.com/Mohamed-Mudawi/PhisyMail-AI
+- git clone https://github.com/Mohamed-Mudawi/PhishyMail-AI
 - venv\Scripts\activate # Powershell, Windows
 - pip install -r requirements.txt
 - streamlit run finalFrontend.py
